@@ -15,7 +15,7 @@ function doBuild( buildMode ) {
     .transform(to5ify)
     .bundle()
     .on("error", gutil.log.bind(gutil, "Browserify Error"))
-    .pipe(source("_y-h" + ((isRelease) ? ".min" : "") + ".js"))
+    .pipe(source("yasmf-h" + ((isRelease) ? ".min" : "") + ".js"))
     .pipe(buffer())
     .pipe(isRelease ? gutil.noop() : sourcemaps.init({loadMaps: true})) // loads map from browserify file
     .pipe(isRelease ? uglify() : gutil.noop())

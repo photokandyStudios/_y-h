@@ -1,9 +1,9 @@
-# \_y-h - A Simple DOM Templating Module
+# yasmf-h - A Simple DOM Templating Module
 
 This is a simple templating module that generates DOM elements based on a function. It lets you write code like this:
 
 ```
-    var h = require("_y-h"),
+    var h = require("yasmf-h"),
         n = h.el("div.ui-container#rootContainer",
               h.el("ul.ui-list", [
                 h.li("item 1"),
@@ -32,16 +32,19 @@ projects, so use whatever fits best in your project.
 > additional package that simulates the DOM tree. For tests, I've used `dom-lite`. You can try to use other modules, but many
 > appear to fail on setting `textContent`, which this library relies upon.
 
+For the curious, YASMF refers to "Yet Another Simple Mobile Framework". `H` is so named, because it originated there, but it is
+useful enough to be split out.
+
 ## Installation
 
 If you're using Browserify as a package manager or using this in server-side code, install this using NPM:
 
 ```
-$ npm --save install _y-h
+$ npm --save install yasmf-h
 ```
 
 If you're using a browser, download one of the JavaScript files in the `build` directory and use a script tag. There is a minified
-version (`_y-h.min.js`) and a non-minified version (`_y-h.js`). The non-minified version does include sourcemaps as this project
+version (`yasmf-h.min.js`) and a non-minified version (`yasmf-h.js`). The non-minified version does include sourcemaps as this project
 is transitioning to ES6 and is using 6to5.
 
 ## Usage
