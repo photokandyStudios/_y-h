@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>H test</title>
+    <script src="../build/_y-h.min.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="target"></div>
+    <script type="text/javascript">
+      var target = document.getElementById("target"),
+          n = h.el("div", "Hello, World!");
+      h.renderTo(n, target);
+    </script>
+  </body>
+</html>
