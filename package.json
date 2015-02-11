@@ -4,8 +4,7 @@
   "description": "Simple DOM Templating",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
-    "make": "gulp build"
+    "test": "mocha"
   },
   "keywords": [
     "DOM",
