@@ -427,7 +427,8 @@ var h = {
         // `textContent` (buttons have both) If both are present, the first
         // content item is applied to `value`, and the second is applied to
         // `textContent`|`innerText`
-        if (e.value !== undefined) {
+        // NOTE: LIs have values. Whodathunk?
+        if (e.value !== undefined && tagParts.tag !== "li") {
             contentTarget.push("value");
         }
         if (( e.textContent !== undefined ) || ( e.innerText !== undefined )) {
