@@ -11,7 +11,7 @@ var uglify = require("gulp-uglify");
 function doBuild( buildMode ) {
   var isRelease = (buildMode === "release");
 
-  browserify("./index.js", { debug: !isRelease })
+  browserify("./index.js", { debug: !isRelease, standalone: "h" })
     .transform(to5ify)
     .bundle()
     .on("error", gutil.log.bind(gutil, "Browserify Error"))
