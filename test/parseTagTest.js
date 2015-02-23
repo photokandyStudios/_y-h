@@ -37,6 +37,24 @@ function shouldHaveNoAttrs(r) {
 }
 
 describe ("parseTag", function () {
+    describe ("#single-letter-tag", function () {
+      it("should be a p and nothing else", function () {
+        var r = parseTag("p");
+        shouldHaveTag(r, "p");
+        shouldHaveNoId(r);
+        shouldHaveNoClass(r);
+        shouldHaveNoAttrs(r);
+      })
+    });
+    describe ("#single-letter-tag-with-class", function () {
+      it("should be a p with class a", function () {
+        var r = parseTag("p.a");
+        shouldHaveTag(r, "p");
+        shouldHaveNoId(r);
+        shouldHaveClass(r, "a");
+        shouldHaveNoAttrs(r);
+      })
+    });
     describe ("#only-tag", function () {
         it("should be a div and nothing else", function () {
             var r = parseTag("div");
