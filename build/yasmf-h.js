@@ -1,4 +1,4 @@
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.h=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.h = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
  *
  * # h - simple DOM templating
@@ -119,6 +119,8 @@
  * * hammer handlers using `hammer` object
  * * data binding using `bind` object
  * * store element references to a container object using `storeTo` object
+ * * Directly set `textContent` via `content` property
+ * * Directly set `value` attribute via `value` property
  *
  *
  */
@@ -164,7 +166,6 @@ function appendChildToParent(child, parent) {
     }
 }
 
-
 function getAndSetElementId(e) {
     var id = e.getAttribute("id");
     if (id === undefined || id === null) {
@@ -174,7 +175,6 @@ function getAndSetElementId(e) {
     }
     return id;
 }
-
 
 function transform(parent, nodeA, nodeB) {
     var hasChildren = [false, false],
@@ -209,7 +209,8 @@ function transform(parent, nodeA, nodeB) {
         return;
     }
     if (nodeB.classList) {
-        if (!nodeB.classList.contains("ui-container") && !nodeB.classList.contains("ui-list") && !nodeB.classList.contains("ui-scroll-container")) {
+        var nodeBIs = nodeB.getAttribute("is");
+        if (!nodeB.classList.contains("ui-container") && !nodeB.classList.contains("ui-list") && !nodeB.classList.contains("ui-scroll-container" && !nodeB.tagName === "y-container" && !nodeB.tagName === "y-scroll-container" && !nodeB.tagName === "y-list" && !nodeBIs === "y-container") && !nodeBIs === "y-scroll-container" && !nodeBIs === "y-list") {
             // if the node types are different, there's no reason to transform tree A -- just replace the whole thing
             parent.replaceChild(nodeB, nodeA);
             return;
@@ -273,7 +274,7 @@ function transform(parent, nodeA, nodeB) {
  * h templating engine
  */
 var h = {
-    VERSION: "0.1.100",
+    VERSION: "0.1.4",
     useDomMerging: false,
     debug: false,
     Hammer: null,
@@ -315,7 +316,7 @@ var h = {
      * @returns {Node}                           DOM tree
      *
      */
-    el: function (tag /*, tagOptions, args */) {
+    el: function el(tag /*, tagOptions, args */) {
         var e,
             i,
             l,
@@ -375,6 +376,18 @@ var h = {
         });
 
         if (typeof options === "object" && options !== null) {
+            // set tetContent directly if desired
+            if (options.content !== undefined) {
+                if (e.textContent !== undefined) {
+                    e.textContent = options.content;
+                } else if (e.innerText !== undefined) {
+                    e.innerText = options.content;
+                }
+            }
+            // set value directly if desired
+            if (options.value !== undefined) {
+                e.setAttribute("value", options.value);
+            }
             // add attributes
             onEachDefined(options, "attrs", function (v, p) {
                 e.setAttribute(p, v);
@@ -613,8 +626,6 @@ h.dF = h.DF;
 module.exports = h;
 
 },{"./lib/onEachDefined":2,"./lib/parseTag":3}],2:[function(require,module,exports){
-"use strict";
-
 /*
  * _y-h - simple DOM templating
  *
@@ -639,6 +650,8 @@ module.exports = h;
  * OTHER DEALINGS IN THE SOFTWARE.
  * ```
  */
+
+"use strict";
 
 function onEachDefined(o, prop, cb) {
     var oProp, propName, propValue;
@@ -671,8 +684,6 @@ function onEachDefined(o, prop, cb) {
 module.exports = onEachDefined;
 
 },{}],3:[function(require,module,exports){
-"use strict";
-
 /*
  * _y-h - simple DOM templating
  *
@@ -706,6 +717,8 @@ module.exports = onEachDefined;
  * @param {boolean} [chop]
  * @returns {*}
  */
+"use strict";
+
 function parse(str, regexp, chop) {
     var results = str.match(regexp),
         rStr;
@@ -752,7 +765,7 @@ function parseTag(tag) {
     // # identifies ID
     // . identifies class
     // ? identifies attributes (query string format)
-    tagParts.tag = parse(tag, /.[^\#\.\?]+/);
+    tagParts.tag = parse(tag, /.[^\#\.\?]*/);
     tagParts.id = parse(tag, /\#[^\#\.\?]+/, true);
     tagParts.query = parse(tag, /\?[^\#\.\?]+/, true);
     tagParts["class"] = parse(tag, /\.[^\#\.\?]+/, true);
