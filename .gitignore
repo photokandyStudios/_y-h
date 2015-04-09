@@ -80,4 +80,4 @@ crashlytics.properties
 crashlytics-build.properties
 
 #ignore ES5 output
-lib/
+./lib/
