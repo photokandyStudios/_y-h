@@ -1,3 +1,5 @@
 test/
+src/
+babelhook.js
 build/
 gulpfile.js
