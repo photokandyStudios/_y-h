@@ -118,6 +118,8 @@
  * * hammer handlers using `hammer` object
  * * data binding using `bind` object
  * * store element references to a container object using `storeTo` object
+ * * Directly set `textContent` via `content` property
+ * * Directly set `value` attribute via `value` property
  *
  *
  */
@@ -207,7 +209,10 @@ function transform(parent, nodeA, nodeB) {
         return;
     }
     if (nodeB.classList) {
-        if (!nodeB.classList.contains("ui-container") && !nodeB.classList.contains("ui-list") && !nodeB.classList.contains("ui-scroll-container")) {
+        var nodeBIs = nodeB.getAttribute("is");
+        if (!nodeB.classList.contains("ui-container") && !nodeB.classList.contains("ui-list") && !nodeB.classList.contains("ui-scroll-container" &&
+            !nodeB.tagName === "y-container" && !nodeB.tagName === "y-scroll-container" && !nodeB.tagName === "y-list" &&
+            !nodeBIs === "y-container") && !nodeBIs === "y-scroll-container" && !nodeBIs === "y-list") {
             // if the node types are different, there's no reason to transform tree A -- just replace the whole thing
             parent.replaceChild(nodeB, nodeA);
             return;
@@ -271,7 +276,7 @@ function transform(parent, nodeA, nodeB) {
  * h templating engine
  */
 var h = {
-    VERSION:       "0.1.100",
+    VERSION:       "0.1.4",
     useDomMerging: false,
     debug:         false,
     Hammer:        null,
@@ -370,6 +375,18 @@ var h = {
         });
 
         if (typeof options === "object" && options !== null) {
+            // set tetContent directly if desired
+            if (options.content !== undefined) {
+                if (e.textContent !== undefined) {
+                    e.textContent = options.content;
+                } else if (e.innerText !== undefined) {
+                    e.innerText = options.content;
+                }
+            }
+            // set value directly if desired
+            if (options.value !== undefined) {
+                e.setAttribute("value", options.value);
+            }
             // add attributes
             onEachDefined(options, "attrs", function (v, p) {
                 e.setAttribute(p, v);
