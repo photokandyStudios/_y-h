@@ -1,6 +1,6 @@
 /*globals require, describe, it */
 var should        = require("should"),
-    onEachDefined = require("../lib/onEachDefined");
+    onEachDefined = require("../src/lib/onEachDefined");
 
 describe("onEachDefined", function () {
     describe("#simple-copy", function () {

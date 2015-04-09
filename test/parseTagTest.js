@@ -1,7 +1,7 @@
 /*globals require, describe, it*/
 var assert = require("assert"),
     should = require("should"),
-    parseTag = require("../lib/parseTag");
+    parseTag = require("../src/lib/parseTag");
 
 function shouldHaveTag(r, tag) {
     //noinspection BadExpressionStatementJS

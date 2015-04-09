@@ -1,6 +1,6 @@
 /*globals require, describe, it*/
 var should = require("should"),
-    h = require("../"),
+    h = require("../src/index.js"),
     domLite = require ("dom-lite");
 global.document = domLite.document;
 global.Node = domLite.Node;
