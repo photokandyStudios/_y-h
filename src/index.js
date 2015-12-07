@@ -180,8 +180,7 @@ function getAndSetElementId(e) {
 function transform(parent, nodeA, nodeB) {
     var hasChildren = [false, false],
         childNodes = [[], []],
-        _A = 0,
-        _B = 1,
+        _A = 0, _B = 1,
         i, l,
         len = [0, 0],
         nodes = [nodeA, nodeB],
@@ -208,16 +207,30 @@ function transform(parent, nodeA, nodeB) {
         parent.replaceChild(nodeB, nodeA);
         return;
     }
-    if (nodeB.classList) {
-        var nodeBIs = nodeB.getAttribute("is");
+    //if (nodeB.classList || nodeB.getAttribute("is"))  {
+        var nodeBInfo = [ nodeB.getAttribute("is"), nodeB.tagName].concat(Array.from(nodeB.classList))
+                        .map(i => i ? i.toLowerCase() : "");
+        var excludes = [ "y-container", "y-list", "y-scroll-container", "y-navigation-wrapper",
+                         "y-split-view-wrapper", "y-navigation-view-controller",
+                         "y-split-view-controller",
+                         "ui-container", "ui-list", "ui-scroll-container"];
+        if (!excludes.reduce((prevE, curE) => {
+            return prevE ? true : nodeBInfo.reduce((prevI, curI) => {
+                return prevI ? true : curI === curE;
+            }, prevE);
+        }, false)) {
+            parent.replaceChild(nodeB, nodeA);
+            return;
+        }
+/*
         if (!nodeB.classList.contains("ui-container") && !nodeB.classList.contains("ui-list") && !nodeB.classList.contains("ui-scroll-container" &&
             !nodeB.tagName === "y-container" && !nodeB.tagName === "y-scroll-container" && !nodeB.tagName === "y-list" &&
             !nodeBIs === "y-container") && !nodeBIs === "y-scroll-container" && !nodeBIs === "y-list") {
             // if the node types are different, there's no reason to transform tree A -- just replace the whole thing
             parent.replaceChild(nodeB, nodeA);
             return;
-        }
-    }
+        }*/
+   // }
     // set up for transforming this node
     nodes.forEach(
         /**
@@ -270,6 +283,12 @@ function transform(parent, nodeA, nodeB) {
         }
     }
     // copy events... I wish.
+}
+
+function removeRemainingChildrenFromElement(el, startingAt, nodeCount) {
+    for (let i = startingAt; i < nodeCount; i++) {
+        el.removeChild(el.childNodes[i]);
+    }
 }
 
 /**
@@ -587,15 +606,20 @@ var h = {
      * @param  {Number} idx  index (optional)
      */
     renderTo:      function renderTo(n, el, idx) {
+        if (!n || !el) {
+            return;
+        }
         if (!idx) {
             idx = 0;
         }
         if (n instanceof Array) {
+            var elNodeCount = el.children.length;
             for (var i = 0, l = n.length; i < l; i++) {
                 if (n[i] !== undefined && n[i] !== null) {
                     renderTo(n[i], el, i);
                 }
             }
+            removeRemainingChildrenFromElement(el, n.length, elNodeCount);
         } else {
             if (n === undefined || n === null || el === undefined || el === null) {
                 return;
